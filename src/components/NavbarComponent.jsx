@@ -54,6 +54,10 @@ function authLinkClass(pathname, path, filled = false) {
     : "rounded-full px-4 py-2 text-sm font-medium text-gray-600 transition hover:text-gray-900 hover:ring-1 hover:ring-gray-200";
 }
 
+
+
+
+
 export default function NavbarComponent() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);

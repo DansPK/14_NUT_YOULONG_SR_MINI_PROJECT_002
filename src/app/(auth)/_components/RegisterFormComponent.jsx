@@ -2,13 +2,15 @@
 
 import { Button } from "@heroui/react";
 import { useForm } from "react-hook-form";
+import {loginAction, RegisterAction} from "../../../../action/auth.action";
+import {email} from "zod";
+import {useState} from "react";
 
 export default function RegisterFormComponent() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+
+  const [submitError, setSubmitError] = useState(null);
+
+  const {register, handleSubmit} = useForm({
     defaultValues: {
       name: "",
       email: "",
@@ -17,8 +19,37 @@ export default function RegisterFormComponent() {
     },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+
+
+  const onSubmit =  async (data) => {
+
+    const parts = data.name.trim().split(" ");
+
+    const dataReq = {
+      firstName: parts[0],
+      lastName: parts[1],
+      email: data.email,
+      password: data.password,
+      birthdate: data.birthdate,
+    };
+
+
+    try {
+      const response = await RegisterAction(dataReq);
+      console.log("Register response:", response);
+
+      if (!response?.success) {
+        setSubmitError("Invalid data");
+      }
+
+
+    } catch (error) {
+      console.error("Login error:", error);
+      setSubmitError("Something went wrong");
+    }
+
+
+
   };
 
   return (

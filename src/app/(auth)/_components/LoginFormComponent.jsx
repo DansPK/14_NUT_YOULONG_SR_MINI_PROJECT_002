@@ -6,7 +6,15 @@ import { useForm } from "react-hook-form";
 import {loginAction} from "../../../../action/auth.action";
 
 export default function LoginFormComponent() {
+
   const [submitError, setSubmitError] = useState(null);
+
+  const {register, handleSubmit} = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
   const onSubmit = async (data) => {
     try {
@@ -15,10 +23,9 @@ export default function LoginFormComponent() {
 
       if (!response?.success) {
         setSubmitError("Invalid email or password");
-        return;
       }
 
-      // success → redirect or update UI
+
     } catch (error) {
       console.error("Login error:", error);
       setSubmitError("Something went wrong");

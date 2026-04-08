@@ -3,8 +3,7 @@ import { loginService } from "./service/auth.service";
 import Credentials from "next-auth/providers/credentials";
 
 
-
-export const {handlers,singIn, signOut, auth} = NextAuth({
+export const {handlers,signIn, signOut, auth} = NextAuth({
     providers: [
         Credentials({
             name: "Credentials",
@@ -24,8 +23,8 @@ export const {handlers,singIn, signOut, auth} = NextAuth({
         },
     }),
     ],
-    session: process.env.BETTER_AUTH_SECRET,
-    sessions:{
+    secret: process.env.BETTER_AUTH_SECRET,
+    session: {
         strategy: "jwt",
 
     },
