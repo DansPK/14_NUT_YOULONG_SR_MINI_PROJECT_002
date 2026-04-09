@@ -11,5 +11,11 @@ export default auth(function middleware(req) {
 });
 
 export const config = {
-    matcher: ["/products/:path*", "/category/:path*"],
+    matcher: [
+        "/products",
+        "/products/:path*",
+        "/orders",
+        "/manage-products",
+        "/cart",
+    ],
 };
