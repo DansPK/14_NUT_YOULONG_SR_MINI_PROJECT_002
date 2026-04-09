@@ -4,13 +4,18 @@ import { categories, products } from "../../data/mockData";
 import LandingHeroSectionComponent from "../../components/landing/LandingHeroSectionComponent";
 import LandingBestSellerSectionComponent from "../../components/landing/LandingBestSellerSectionComponent";
 import LandingEssentialComponent from "../../components/landing/LandingEssentialComponent";
+import LoginToastComponent from "../(auth)/_components/LoginToastComponent";
+import {auth} from "../../../auth";
+import {getUserAction} from "../../../action/user.action";
 
 const bestSellers = products.slice(0, 4);
 const heroStrip = products.slice(0, 3);
 
-export default function Home() {
+export default async function Home() {
+    const session = await auth();
   return (
     <div className="bg-[#fafafa]">
+        <LoginToastComponent/>
       <LandingHeroSectionComponent miniProducts={heroStrip} />
       <LandingBestSellerSectionComponent items={bestSellers} />
       <LandingEssentialComponent />

@@ -12,7 +12,7 @@ export async function loginAction(data) {
         const response = await signIn("credentials", {
             email,
             password,
-            redirectTo: "/products" ,
+            redirectTo: "/?loggedIn=true" ,
         });
 
         if (response?.error) {

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-let loginToastShown = false; // ← lives outside the component, persists across remounts
+let loginToastShown = false;
 
 export default function LoginToastComponent() {
     const searchParams = useSearchParams();

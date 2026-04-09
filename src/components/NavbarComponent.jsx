@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { Button } from "@heroui/react";
+import {getUserAction} from "../../action/user.action";
+import {DropdownMenuAvatar} from "@/components/ProfileComponent";
 // import { useCart } from "@/store/cartStore";
 
 const centerLinks = [
@@ -61,6 +63,30 @@ function authLinkClass(pathname, path, filled = false) {
 export default function NavbarComponent() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    getUserAction().then(data => setUser(data)).catch(err => console.error(err));
+  }, []);
+
+
+  const authLinks = user? (
+      <DropdownMenuAvatar></DropdownMenuAvatar>
+  ):(
+
+        <div className="hidden items-center gap-2 sm:flex">
+          <Link href="/login" className={authLinkClass(pathname, "/login", false)}>
+            Log in
+          </Link>
+          <Link href="/register" className={authLinkClass(pathname, "/register", true)}>
+            Register
+          </Link>
+        </div>
+
+
+  );
+
+
 //   const { totalQuantity } = useCart();
 
 //   const cartLabel =
@@ -101,26 +127,22 @@ export default function NavbarComponent() {
               </Link>
             );
           })}
+
+
         </nav>
 
         <div className="z-10 flex items-center gap-2 sm:gap-3">
-          <div className="hidden items-center gap-2 sm:flex">
-            <Link href="/login" className={authLinkClass(pathname, "/login", false)}>
-              Log in
-            </Link>
-            <Link href="/register" className={authLinkClass(pathname, "/register", true)}>
-              Register
-            </Link>
-          </div>
+          {authLinks}
+
           <Link
-            href="/cart"
-            // aria-label={cartLabel}
-            // title={cartLabel}
-            className={`relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition ${
-              pathname === "/cart"
-                ? "border-lime-500 bg-lime-400 text-gray-900"
-                : "border-gray-200 text-gray-700 hover:border-lime-300 hover:bg-lime-50"
-            }`}
+              href="/cart"
+              // aria-label={cartLabel}
+              // title={cartLabel}
+              className={`relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition ${
+                  pathname === "/cart"
+                      ? "border-lime-500 bg-lime-400 text-gray-900"
+                      : "border-gray-200 text-gray-700 hover:border-lime-300 hover:bg-lime-50"
+              }`}
           >
             <CartBagIcon className="size-5" />
             {/* <span
@@ -134,17 +156,19 @@ export default function NavbarComponent() {
           </Link>
 
           <Button
-            isIconOnly
-            variant="secondary"
-            className="h-10 w-10 shrink-0 rounded-full border border-gray-200 text-gray-700 md:hidden"
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            onPress={() => setOpen((v) => !v)}
+              isIconOnly
+              variant="secondary"
+              className="h-10 w-10 shrink-0 rounded-full border border-gray-200 text-gray-700 md:hidden"
+              aria-expanded={open}
+              aria-controls="mobile-nav"
+              onPress={() => setOpen((v) => !v)}
           >
             <span className="sr-only">Menu</span>
             {open ? "✕" : "☰"}
           </Button>
         </div>
+
+
       </div>
 
       {open && (

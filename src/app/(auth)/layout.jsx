@@ -1,4 +1,9 @@
 import Link from "next/link";
+import { auth } from "../../../auth";
+import { redirect } from "next/navigation";
+
+
+
 
 function ProductIcon({ className, variant }) {
   // Simple inline SVG icons (no external assets needed).
@@ -94,7 +99,10 @@ function ProductIcon({ className, variant }) {
   );
 }
 
-export default function AuthLayout({ children }) {
+export default async function AuthLayout({ children }) {
+
+  const session = await auth();
+  if (session) redirect("/");
   return (
     <main className="flex-1">
       <div className="relative mx-auto flex min-h-full max-w-7xl items-center justify-center px-4 py-12 sm:py-16">
