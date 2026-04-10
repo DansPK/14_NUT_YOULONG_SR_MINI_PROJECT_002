@@ -37,8 +37,8 @@ export default function LoginFormComponent() {
 
   const {register, handleSubmit, formState: {errors}} = useForm({
     resolver: zodResolver(schema),
-    mode: "onBlur",
-    reValidateMode: "onChange",
+    // mode: "onBlur",
+    // reValidateMode: "onChange",
     shouldFocusError:true,
     defaultValues: {
       email: "",

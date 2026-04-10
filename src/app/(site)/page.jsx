@@ -5,7 +5,7 @@ import LandingHeroSectionComponent from "../../components/landing/LandingHeroSec
 import LandingBestSellerSectionComponent from "../../components/landing/LandingBestSellerSectionComponent";
 import LandingEssentialComponent from "../../components/landing/LandingEssentialComponent";
 import LoginToastComponent from "../(auth)/_components/LoginToastComponent";
-import {auth} from "../../../auth";
+import {auth} from "../../auth";
 import {getUserAction} from "../../../action/user.action";
 
 const bestSellers = products.slice(0, 4);

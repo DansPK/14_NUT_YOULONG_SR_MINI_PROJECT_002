@@ -1,5 +1,5 @@
 import {error} from "next/dist/build/output/log";
-import {auth} from "../auth";
+import {auth} from "@/auth";
 
 export async function getUserService() {
     const session = await auth();

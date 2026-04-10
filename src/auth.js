@@ -1,5 +1,5 @@
 import NextAuth from "next-auth";
-import { loginService } from "./service/auth.service";
+import { loginService } from "../service/auth.service";
 import Credentials from "next-auth/providers/credentials";
 
 

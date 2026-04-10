@@ -60,17 +60,17 @@ function authLinkClass(pathname, path, filled = false) {
 
 
 
-export default function NavbarComponent() {
+export default function NavbarComponent({session}) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    getUserAction().then(data => setUser(data)).catch(err => console.error(err));
-  }, []);
+  // useEffect(() => {
+  //   .then(data => setUser(data)).catch(err => console.error(err));
+  // }, []);
 
 
-  const authLinks = user? (
+  const authLinks = session? (
       <DropdownMenuAvatar></DropdownMenuAvatar>
   ):(
 
