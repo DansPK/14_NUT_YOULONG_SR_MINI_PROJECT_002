@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
-import { getProductByIdAction } from "../../../../action/product.action";
-import { getCategoryAction } from "../../../../action/category.action";
-import ProductDetailClient from "../../../components/shop/ProductDetailClient";
+import { getProductByIdAction } from "../../../../../action/product.action";
+import { getCategoryAction } from "../../../../../action/category.action";
+import ProductDetailClient from "../../../../components/shop/ProductDetailClient";
 
 export default async function ProductDetailPage({ params }) {
     const { productId } = await params;
@@ -25,4 +25,5 @@ export default async function ProductDetailPage({ params }) {
         </div>
     );
 }
+
 
