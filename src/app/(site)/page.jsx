@@ -5,20 +5,22 @@ import LandingHeroSectionComponent from "../../components/landing/LandingHeroSec
 import LandingBestSellerSectionComponent from "../../components/landing/LandingBestSellerSectionComponent";
 import LandingEssentialComponent from "../../components/landing/LandingEssentialComponent";
 import LoginToastComponent from "../(auth)/_components/LoginToastComponent";
-import {auth} from "../../auth";
-import {getUserAction} from "../../../action/user.action";
 
-const bestSellers = products.slice(0, 4);
+import {getBestSellingProductAction} from "../../../action/product.action";
+import {auth} from "@/auth";
+
+// const bestSellers = products.slice(0, 4);
 const heroStrip = products.slice(0, 3);
 
 export default async function Home() {
     const session = await auth();
+    const bestSellers = session ? await getBestSellingProductAction() : [];
   return (
     <div className="bg-[#fafafa]">
         <LoginToastComponent/>
       <LandingHeroSectionComponent miniProducts={heroStrip} />
-      <LandingBestSellerSectionComponent items={bestSellers} />
-      <LandingEssentialComponent />
+      <LandingBestSellerSectionComponent items={bestSellers} session={session} />
+      <LandingEssentialComponent session={session} />
 
       <section className="mx-auto w-full max-w-7xl py-16 lg:py-20">
         <div className="grid gap-4 md:grid-cols-3">

@@ -1,3 +1,5 @@
+"use client";
+
 import {
     BadgeCheckIcon,
     BellIcon,
@@ -19,11 +21,9 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {useEffect, useState} from "react";
 import {logoutAction} from "../../action/auth.action";
 
 export function DropdownMenuAvatar() {
-
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
