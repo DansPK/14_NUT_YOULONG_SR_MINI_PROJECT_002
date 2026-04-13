@@ -1,5 +1,27 @@
 import {auth} from "@/auth";
 
+export async function getProductsService() {
+    const session = await auth();
+    const headers = { "Content-Type": "application/json" };
+    if (session?.user?.token) {
+        headers["Authorization"] = `Bearer ${session.user.token}`;
+    }
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/products`, {
+            method: "GET",
+            headers,
+            cache: "no-store",
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to fetch products: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 export async function getBestSellingProductService(){
 
     const session = await auth();

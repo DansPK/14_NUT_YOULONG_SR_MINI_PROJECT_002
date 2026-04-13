@@ -1,7 +1,16 @@
 "use server";
 
+import {getBestSellingProductService, getProductsService} from "../service/product.service";
 
-import {getBestSellingProductService} from "../service/product.service";
+export async function getProductsAction() {
+    try {
+        const res = await getProductsService();
+        return res?.payload ?? [];
+    } catch (error) {
+        console.log("Error fetching products:", error);
+        return [];
+    }
+}
 
 export async function getBestSellingProductAction(){
     try {
