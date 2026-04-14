@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { ShoppingCart, X } from "lucide-react";
 
 const FALLBACK_IMAGE = "https://placehold.co/80x80/f3f4f6/9ca3af?text=?";
 
@@ -53,7 +54,7 @@ export default function CartPage() {
     if (items.length === 0) {
         return (
             <div className="mx-auto flex min-h-[60vh] max-w-7xl flex-col items-center justify-center gap-3 px-4 py-20 text-center">
-                <p className="text-5xl">🛒</p>
+                <ShoppingCart size={56} className="text-gray-300" />
                 <p className="text-2xl font-semibold text-gray-900">Your cart is empty</p>
                 <p className="text-sm text-gray-500">Add some products from the shop to get started.</p>
                 <Link href="/products" className="mt-4 rounded-full bg-lime-400 px-6 py-3 text-sm font-semibold text-gray-900 transition hover:bg-lime-300">
@@ -120,7 +121,7 @@ export default function CartPage() {
                         <button onClick={() => deleteItem(item.productId)}
                             className="ml-1 text-gray-300 transition hover:text-red-400"
                             aria-label="Remove item">
-                            ✕
+                            <X size={16} />
                         </button>
                     </div>
                 ))}

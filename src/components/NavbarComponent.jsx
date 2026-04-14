@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {useEffect, useState} from "react";
+import { useState } from "react";
 import { Button } from "@heroui/react";
-import {getUserAction} from "../../action/user.action";
-import {DropdownMenuAvatar} from "@/components/ProfileComponent";
+import { X, Menu } from "lucide-react";
+import { DropdownMenuAvatar } from "@/components/ProfileComponent";
 import { useCart, selectTotalQuantity } from "@/store/cartStore";
 
 const centerLinks = [
@@ -14,6 +14,7 @@ const centerLinks = [
   { href: "/manage-products", label: "Manage Products" },
   { href: "/orders", label: "Orders" },
 ];
+
 
 function CartBagIcon({ className }) {
   return (
@@ -35,75 +36,61 @@ function CartBagIcon({ className }) {
   );
 }
 
+
 function linkActive(pathname, label) {
   if (label === "Home") return pathname === "/";
   if (label === "Shop") return pathname === "/products" || pathname.startsWith("/products/");
-  if (label === "Categories") return pathname === "/categories";
   if (label === "Orders") return pathname === "/orders";
   if (label === "Manage Products") return pathname === "/manage-products";
   return false;
 }
 
+
 function authLinkClass(pathname, path, filled = false) {
-  const on = pathname === path;
+  const isActive = pathname === path;
   if (filled) {
-    return on
+    return isActive
       ? "rounded-full bg-lime-500 px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm"
       : "rounded-full bg-lime-400 px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-lime-300";
   }
-  return on
+  return isActive
     ? "rounded-full px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-gray-300"
     : "rounded-full px-4 py-2 text-sm font-medium text-gray-600 transition hover:text-gray-900 hover:ring-1 hover:ring-gray-200";
 }
 
-
-
-
-
-export default function NavbarComponent({session}) {
+export default function NavbarComponent({ session }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState(null);
-
-  // useEffect(() => {
-  //   .then(data => setUser(data)).catch(err => console.error(err));
-  // }, []);
-
-
-  const authLinks = session? (
-      <DropdownMenuAvatar></DropdownMenuAvatar>
-  ):(
-
-        <div className="hidden items-center gap-2 sm:flex">
-          <Link href="/login" className={authLinkClass(pathname, "/login", false)}>
-            Log in
-          </Link>
-          <Link href="/register" className={authLinkClass(pathname, "/register", true)}>
-            Register
-          </Link>
-        </div>
-
-
-  );
-
-
-//   const { totalQuantity } = useCart();
-
-//   const cartLabel =
-//     totalQuantity > 0 ? `Shopping cart, ${totalQuantity} items` : "Shopping cart";
 
   const totalQuantity = useCart(selectTotalQuantity);
-  const cartLabel =
-    totalQuantity > 0 ? `Shopping cart, ${totalQuantity} items` : "Shopping cart";
+  const cartLabel = totalQuantity > 0
+    ? `Shopping cart, ${totalQuantity} items`
+    : "Shopping cart";
 
   const linkClass = (active) =>
     `relative flex items-center rounded-full px-3 py-2 text-sm font-medium transition ${
       active ? "text-slate-900" : "text-slate-600 hover:text-slate-900"
     }`;
 
+  // Show avatar dropdown when logged in otherwise show login / register links
+  const authLinks = session ? (
+    <DropdownMenuAvatar />
+  ) : (
+    <div className="hidden items-center gap-2 sm:flex">
+      <Link href="/login" className={authLinkClass(pathname, "/login", false)}>
+        Log in
+      </Link>
+      <Link href="/register" className={authLinkClass(pathname, "/register", true)}>
+        Register
+      </Link>
+    </div>
+  );
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200/80 bg-white/60 backdrop-blur-md">
       <div className="relative mx-auto flex w-full max-w-7xl items-center justify-between gap-4 py-3 lg:py-4">
+
+        {/* Brand */}
         <Link
           href="/"
           className="z-10 shrink-0 text-lg font-semibold tracking-tight text-gray-900 transition hover:text-lime-700"
@@ -111,6 +98,7 @@ export default function NavbarComponent({session}) {
           PurelyStore
         </Link>
 
+        {/* Desktop center navigation */}
         <nav
           className="absolute left-1/2 hidden w-auto -translate-x-1/2 items-center gap-1 md:flex"
           aria-label="Main"
@@ -119,7 +107,6 @@ export default function NavbarComponent({session}) {
             const active = linkActive(pathname, label);
             return (
               <Link key={href + label} href={href} className={linkClass(active)}>
-              {/* <Link key={href + label} href={href}> */}
                 {badge && (
                   <span className="absolute -top-2 z-20 left-1/2 -translate-x-1/2 rounded-full bg-lime-400 px-1.5 py-px text-[9px] font-bold uppercase tracking-wide text-gray-900">
                     {badge}
@@ -131,22 +118,22 @@ export default function NavbarComponent({session}) {
               </Link>
             );
           })}
-
-
         </nav>
 
+        {/* Right side: auth, cart, mobile menu toggle */}
         <div className="z-10 flex items-center gap-2 sm:gap-3">
           {authLinks}
 
+          {/* Cart icon with live quantity badge */}
           <Link
-              href="/cart"
-              aria-label={cartLabel}
-              title={cartLabel}
-              className={`relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition ${
-                  pathname === "/cart"
-                      ? "border-lime-500 bg-lime-400 text-gray-900"
-                      : "border-gray-200 text-gray-700 hover:border-lime-300 hover:bg-lime-50"
-              }`}
+            href="/cart"
+            aria-label={cartLabel}
+            title={cartLabel}
+            className={`relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition ${
+              pathname === "/cart"
+                ? "border-lime-500 bg-lime-400 text-gray-900"
+                : "border-gray-200 text-gray-700 hover:border-lime-300 hover:bg-lime-50"
+            }`}
           >
             <CartBagIcon className="size-5" />
             <span
@@ -159,22 +146,22 @@ export default function NavbarComponent({session}) {
             </span>
           </Link>
 
+          {/* Mobile hamburger — only visible below md breakpoint */}
           <Button
-              isIconOnly
-              variant="secondary"
-              className="h-10 w-10 shrink-0 rounded-full border border-gray-200 text-gray-700 md:hidden"
-              aria-expanded={open}
-              aria-controls="mobile-nav"
-              onPress={() => setOpen((v) => !v)}
+            isIconOnly
+            variant="secondary"
+            className="h-10 w-10 shrink-0 rounded-full border border-gray-200 text-gray-700 md:hidden"
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            onPress={() => setOpen((v) => !v)}
           >
             <span className="sr-only">Menu</span>
-            {open ? "✕" : "☰"}
+            {open ? <X size={18} /> : <Menu size={18} />}
           </Button>
         </div>
-
-
       </div>
 
+      {/* Mobile slide-down navigation */}
       {open && (
         <div id="mobile-nav" className="border-t border-gray-100 bg-white py-3 md:hidden">
           <div className="mx-auto flex w-full max-w-7xl flex-col gap-1">

@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
 import { Button } from "@heroui/react";
-import React from "react";
+import { Plus } from "lucide-react";
 import { useCart } from "@/store/cartStore";
 
 export default function ButtonAddComponent({ product }) {
@@ -12,9 +12,9 @@ export default function ButtonAddComponent({ product }) {
       isIconOnly
       aria-label="Add to cart"
       onPress={() => addItem(product)}
-      className="size-11 rounded-full bg-lime-400 text-xl font-light text-gray-900 shadow-sm transition hover:bg-lime-300 active:scale-95"
+      className="size-11 rounded-full bg-lime-400 text-gray-900 shadow-sm transition hover:bg-lime-300 active:scale-95"
     >
-      +
+      <Plus size={20} />
     </Button>
   );
 }

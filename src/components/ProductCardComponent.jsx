@@ -2,12 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { Star, ImageOff } from "lucide-react";
 import ButtonAddComponent from "./ButtonAddComponent";
 
 export function StarRow({ rating = 4.8 }) {
   return (
-    <p className="flex items-center gap-0.5 text-amber-400" aria-label={`${rating} stars`}>
-      <span className="text-sm">★★★★★</span>
+    <p className="flex items-center gap-0.5" aria-label={`${rating} stars`}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <Star
+          key={n}
+          size={12}
+          className={n <= Math.round(rating) ? "fill-amber-400 text-amber-400" : "fill-gray-200 text-gray-200"}
+        />
+      ))}
       <span className="ml-1 text-xs tabular-nums text-gray-500">{rating}</span>
     </p>
   );
@@ -23,14 +30,14 @@ export default function ProductCardComponent({ product }) {
           {imageUrl ? (
             <Image
               src={imageUrl}
-              alt=""
+              alt={productName ?? "product image"}
               fill
               sizes="(max-width: 768px) 50vw, 25vw"
               className="object-cover transition group-hover:scale-[1.02]"
             />
           ) : (
             <div className="flex size-full items-center justify-center bg-linear-to-br from-gray-100 to-lime-50/30 text-gray-400">
-              ◇
+              <ImageOff size={32} />
             </div>
           )}
         </div>
