@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/store/cartStore";
 import { toast } from "sonner";
-import { ShoppingCart, RotateCcw } from "lucide-react";
+import { ShoppingCart, RotateCcw, Star } from "lucide-react";
 
 const FALLBACK_IMAGE = "https://placehold.co/600x600/f3f4f6/9ca3af.png?text=No+Image";
 
@@ -16,7 +16,11 @@ function StarRow({ rating = 0 }) {
     return (
         <div className="flex items-center gap-0.5">
             {stars.map((filled, i) => (
-                <span key={i} className={`text-xl ${filled ? "text-amber-400" : "text-gray-200"}`}>★</span>
+                <Star
+                    key={i}
+                    size={18}
+                    className={filled ? "fill-amber-400 text-amber-400" : "fill-gray-200 text-gray-200"}
+                />
             ))}
         </div>
     );

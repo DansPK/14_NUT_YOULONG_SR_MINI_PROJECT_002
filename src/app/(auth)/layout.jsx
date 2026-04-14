@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { auth } from "../../auth";
 import { redirect } from "next/navigation";
+import { Sparkles } from "lucide-react";
 
 
 
@@ -134,7 +135,7 @@ export default async function AuthLayout({ children }) {
                 PurelyStore
               </span>
               <span className="inline-flex size-8 items-center justify-center rounded-full bg-lime-400/80 text-gray-900 shadow-sm">
-                ✦
+                <Sparkles size={16} />
               </span>
             </Link>
             <p className="mt-3 text-sm text-gray-500">

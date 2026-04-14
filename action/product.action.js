@@ -1,6 +1,13 @@
 "use server";
 
-import {getBestSellingProductService, getProductsService, getProductByIdService} from "../service/product.service";
+import {
+    getBestSellingProductService,
+    getProductsService,
+    getProductByIdService,
+    createProductService,
+    updateProductService,
+    deleteProductService,
+} from "../service/product.service";
 
 export async function getProductByIdAction(productId) {
     try {
@@ -30,5 +37,35 @@ export async function getBestSellingProductAction(){
     }catch (error) {
         console.log("Error fetching best sellers:", error);
         return [];
+    }
+}
+
+export async function createProductAction(data) {
+    try {
+        const res = await createProductService(data);
+        return res?.payload ?? null;
+    } catch (error) {
+        console.log("Error creating product:", error);
+        return null;
+    }
+}
+
+export async function updateProductAction(productId, data) {
+    try {
+        const res = await updateProductService(productId, data);
+        return res?.payload ?? null;
+    } catch (error) {
+        console.log("Error updating product:", error);
+        return null;
+    }
+}
+
+export async function deleteProductAction(productId) {
+    try {
+        await deleteProductService(productId);
+        return true;
+    } catch (error) {
+        console.log("Error deleting product:", error);
+        return null;
     }
 }

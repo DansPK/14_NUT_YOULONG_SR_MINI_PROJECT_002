@@ -1,21 +1,19 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { Star } from "lucide-react";
 
 const FALLBACK_IMAGE = "https://placehold.co/600x600/f3f4f6/9ca3af.png?text=No+Image";
 
 function StarRating({ rating = 0 }) {
   return (
-    <div className="flex items-center gap-0.5 text-sm">
+    <div className="flex items-center gap-0.5">
       {[1, 2, 3, 4, 5].map((star) => (
-        <span
+        <Star
           key={star}
-          className={
-            star <= Math.round(rating) ? "text-amber-400" : "text-gray-200"
-          }
-        >
-          ★
-        </span>
+          size={13}
+          className={star <= Math.round(rating) ? "fill-amber-400 text-amber-400" : "fill-gray-200 text-gray-200"}
+        />
       ))}
     </div>
   );
