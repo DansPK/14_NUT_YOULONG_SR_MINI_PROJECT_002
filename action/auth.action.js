@@ -1,8 +1,8 @@
 "use server";
 
-import {signIn} from "../auth";
+import {signIn} from "@/auth";
 import {isRedirectError} from "next/dist/client/components/redirect-error";
-import {registerService} from "../service/auth.service";
+import {logoutService, registerService} from "../service/auth.service";
 import {redirect} from "next/navigation";
 
 export async function loginAction(data) {
@@ -12,7 +12,7 @@ export async function loginAction(data) {
         const response = await signIn("credentials", {
             email,
             password,
-            redirectTo: "/products" ,
+            redirectTo: "/?loggedIn=true" ,
         });
 
         if (response?.error) {
@@ -49,3 +49,7 @@ export async function RegisterAction(data) {
     }
 }
 
+export async function logoutAction() {
+    await logoutService();
+    redirect("/login");
+}

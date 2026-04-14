@@ -1,3 +1,5 @@
+import {signOut} from "@/auth";
+
 export async function loginService(req) {
     const user ={
         email: req.email,
@@ -40,4 +42,13 @@ export async function registerService(req) {
         throw error;
     }
 
+}
+
+export async function logoutService() {
+    try {
+        await signOut();
+    }catch (error) {
+        console.error("Error during logout:", error);
+        throw error;
+    }
 }
