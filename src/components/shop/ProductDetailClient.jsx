@@ -55,7 +55,7 @@ export default function ProductDetailClient({ product }) {
             </nav>
 
             <div className="flex flex-col gap-10 lg:flex-row">
-                {/* ── Image ── */}
+                {/*Image*/}
                 <div className="relative aspect-square w-full max-w-md shrink-0 overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 lg:w-[420px]">
                     <Image
                         src={imgSrc}

@@ -58,9 +58,7 @@ export const useCart = create(
   )
 );
 
-// ─── Selector helpers ────────────────────────────────────────────────────────
 // Pass these into useCart() so components only re-render when the value changes.
-//
 //   const totalQuantity = useCart(selectTotalQuantity);
 //   const totalPrice    = useCart(selectTotalPrice);
 

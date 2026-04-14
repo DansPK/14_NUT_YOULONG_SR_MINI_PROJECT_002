@@ -21,7 +21,7 @@ export function DropdownMenuAvatar() {
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
                     <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png" alt="User avatar" />
+                        <AvatarImage src="https://wallpapers-clan.com/wp-content/uploads/2022/11/rick-and-morty-matching-pfp-2.jpg" alt="User avatar" />
                         <AvatarFallback>LR</AvatarFallback>
                     </Avatar>
                 </Button>
