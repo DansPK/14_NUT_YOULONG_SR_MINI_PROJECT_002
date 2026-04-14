@@ -32,7 +32,7 @@ export default function ShopFilterComponent({ products = [], categories = [] }) 
     return category ? category.name : "Uncategorized";
   }
 
-  // Count how many products belong to each category
+  // Count products belong to category
   function getProductCount(categoryId) {
     return products.filter((p) => p.categoryId === categoryId).length;
   }
@@ -178,7 +178,7 @@ export default function ShopFilterComponent({ products = [], categories = [] }) 
           </div>
         </aside>
 
-        {/* ── Product grid ── */}
+        {/*Product grid*/}
         <div className="flex-1">
           {filtered.length === 0 ? (
             <div className="flex h-48 items-center justify-center rounded-2xl border border-dashed border-gray-200 text-sm text-gray-400">

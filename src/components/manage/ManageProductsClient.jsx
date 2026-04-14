@@ -10,6 +10,7 @@ import {
     deleteProductAction,
 } from "../../../action/product.action";
 
+
 const FALLBACK = "https://placehold.co/600x600/f3f4f6/9ca3af.png?text=No+Image";
 
 const COLOR_OPTIONS = ["green", "gray", "red", "blue", "white"];
@@ -27,72 +28,6 @@ function Stars({ count = 0 }) {
                 />
             ))}
             {count > 0 && <span className="ml-1 text-xs text-gray-500">{count}</span>}
-        </div>
-    );
-}
-
-function ProductCard({ product, categories, onEdit, onDelete }) {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [imgSrc, setImgSrc] = useState(
-        product.imageUrl?.startsWith("http") ? product.imageUrl : FALLBACK
-    );
-
-    const category = categories.find((c) => c.categoryId === product.categoryId);
-
-    return (
-        <div className="relative rounded-2xl border border-gray-200 bg-white overflow-hidden shadow-sm">
-            {/* Image */}
-            <div className="relative aspect-square bg-gray-50">
-                <Image
-                    src={imgSrc}
-                    alt={product.name ?? "product"}
-                    fill
-                    unoptimized
-                    className="object-cover"
-                    onError={() => setImgSrc(FALLBACK)}
-                />
-
-                {/* 3-dot menu */}
-                <div className="absolute top-2 right-2">
-                    <button
-                        onClick={() => setMenuOpen((v) => !v)}
-                        className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow text-gray-500 hover:text-gray-900"
-                    >
-                        <MoreHorizontal size={16} />
-                    </button>
-
-                    {menuOpen && (
-                        <div className="absolute right-0 mt-1 w-32 rounded-xl border border-gray-100 bg-white shadow-lg z-10">
-                            <button
-                                onClick={() => { setMenuOpen(false); onEdit(product); }}
-                                className="flex w-full items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-xl"
-                            >
-                                <Pencil size={13} /> Edit
-                            </button>
-                            <button
-                                onClick={() => { setMenuOpen(false); onDelete(product.productId); }}
-                                className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-b-xl"
-                            >
-                                <Trash2 size={13} /> Delete
-                            </button>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* Info */}
-            <div className="p-4">
-                <Stars count={product.star ?? 0} />
-                <p className="mt-1 font-semibold text-gray-900 truncate">{product.name}</p>
-                <div className="mt-1 flex items-center justify-between">
-                    <p className="text-gray-700 font-medium">${product.price}</p>
-                    {category && (
-                        <span className="rounded-full bg-lime-50 px-2 py-0.5 text-xs font-medium text-lime-700">
-                            {category.name}
-                        </span>
-                    )}
-                </div>
-            </div>
         </div>
     );
 }
@@ -131,8 +66,75 @@ function Field({ label, name, value, onChange, type = "text", placeholder, texta
     );
 }
 
-// ─── Create / Edit modal ───────────────────────────────────────────────────────
-function ProductFormModal({ product, categories, onClose, onSave }) {
+
+function ProductCard({ product, categories, onEdit, onDelete }) {
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [imgSrc, setImgSrc] = useState(
+        product.imageUrl?.startsWith("http") ? product.imageUrl : FALLBACK
+    );
+
+    // Find the matching category object
+    const category = categories.find((c) => c.categoryId === product.categoryId);
+
+    return (
+        <div className="relative rounded-2xl border border-gray-200 bg-white overflow-hidden shadow-sm">
+            {/* Product image */}
+            <div className="relative aspect-square bg-gray-50">
+                <Image
+                    src={imgSrc}
+                    alt={product.name ?? "product"}
+                    fill
+                    unoptimized
+                    className="object-cover"
+                    onError={() => setImgSrc(FALLBACK)}
+                />
+
+                {/* 3-dot context menu */}
+                <div className="absolute top-2 right-2">
+                    <button
+                        onClick={() => setMenuOpen((v) => !v)}
+                        className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow text-gray-500 hover:text-gray-900"
+                    >
+                        <MoreHorizontal size={16} />
+                    </button>
+
+                    {menuOpen && (
+                        <div className="absolute right-0 mt-1 w-32 rounded-xl border border-gray-100 bg-white shadow-lg z-10">
+                            <button
+                                onClick={() => { setMenuOpen(false); onEdit(product); }}
+                                className="flex w-full items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-xl"
+                            >
+                                <Pencil size={13} /> Edit
+                            </button>
+                            <button
+                                onClick={() => { setMenuOpen(false); onDelete(product.productId); }}
+                                className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-b-xl"
+                            >
+                                <Trash2 size={13} /> Delete
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Product info */}
+            <div className="p-4">
+                <Stars count={product.star ?? 0} />
+                <p className="mt-1 font-semibold text-gray-900 truncate">{product.name}</p>
+                <div className="mt-1 flex items-center justify-between">
+                    <p className="text-gray-700 font-medium">${product.price}</p>
+                    {category && (
+                        <span className="rounded-full bg-lime-50 px-2 py-0.5 text-xs font-medium text-lime-700">
+                            {category.name}
+                        </span>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function ProductForm({ product, categories, onClose, onSave }) {
     const isEdit = !!product;
 
     const [form, setForm] = useState({
@@ -146,10 +148,12 @@ function ProductFormModal({ product, categories, onClose, onSave }) {
     });
     const [loading, setLoading] = useState(false);
 
+    // handler for all plain text / number inputs
     function handleChange(e) {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     }
 
+    // Toggle a color in/out of the selected colors array
     function toggleColor(color) {
         setForm((prev) => ({
             ...prev,
@@ -159,6 +163,7 @@ function ProductFormModal({ product, categories, onClose, onSave }) {
         }));
     }
 
+    // Toggle a size in/out of the selected sizes array
     function toggleSize(size) {
         setForm((prev) => ({
             ...prev,
@@ -186,8 +191,9 @@ function ProductFormModal({ product, categories, onClose, onSave }) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
             <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl max-h-[90vh] overflow-y-auto">
-                {/* Header */}
-                <div className="mb-1 flex items-center justify-between">
+
+                {/* Modal header */}
+                <div className="mb-5 flex items-center justify-between">
                     <h2 className="text-lg font-semibold text-gray-900">
                         {isEdit ? "Edit product" : "Create product"}
                     </h2>
@@ -195,16 +201,15 @@ function ProductFormModal({ product, categories, onClose, onSave }) {
                         <X size={20} />
                     </button>
                 </div>
-                <p className="mb-5 text-xs text-gray-400">Changes are saved to the server immediately.</p>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Name + Price */}
+                    {/* Name + Price side by side */}
                     <div className="grid grid-cols-2 gap-3">
                         <Field label="Name" name="name" value={form.name} onChange={handleChange} placeholder="e.g. Centella Toner" />
                         <Field label="Price" name="price" type="number" value={form.price} onChange={handleChange} placeholder="0.00" />
                     </div>
 
-                    {/* Category + Image URL */}
+                    {/* Category + Image URL side by side */}
                     <div className="grid grid-cols-2 gap-3">
                         <div>
                             <label className="mb-1 block text-sm font-medium text-gray-700">Category</label>
@@ -223,7 +228,7 @@ function ProductFormModal({ product, categories, onClose, onSave }) {
                         <Field label="Image URL (optional)" name="imageUrl" value={form.imageUrl} onChange={handleChange} placeholder="https://..." />
                     </div>
 
-                    {/* Colors */}
+                    {/* Color picker */}
                     <div>
                         <label className="mb-2 block text-sm font-medium text-gray-700">Colors</label>
                         <div className="flex flex-wrap gap-2">
@@ -238,7 +243,7 @@ function ProductFormModal({ product, categories, onClose, onSave }) {
                         </div>
                     </div>
 
-                    {/* Sizes */}
+                    {/* Size picker */}
                     <div>
                         <label className="mb-2 block text-sm font-medium text-gray-700">Sizes</label>
                         <div className="flex flex-wrap gap-2">
@@ -253,7 +258,7 @@ function ProductFormModal({ product, categories, onClose, onSave }) {
                         </div>
                     </div>
 
-                    {/* Description */}
+                    {/* Description textarea */}
                     <Field
                         label="Description"
                         name="description"
@@ -263,7 +268,7 @@ function ProductFormModal({ product, categories, onClose, onSave }) {
                         textarea
                     />
 
-                    {/* Actions */}
+                    {/* Form action buttons */}
                     <div className="flex justify-end gap-2 pt-1">
                         <button
                             type="button"
@@ -287,8 +292,7 @@ function ProductFormModal({ product, categories, onClose, onSave }) {
     );
 }
 
-// ─── Delete confirmation modal ────────────────────────────────────────────────
-function DeleteConfirmModal({ product, onCancel, onConfirm, loading }) {
+function DeleteConfirm({ product, onCancel, onConfirm, loading }) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
             <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
@@ -322,17 +326,18 @@ function DeleteConfirmModal({ product, onCancel, onConfirm, loading }) {
     );
 }
 
-// ─── Main page ─────────────────────────────────────────────────────────────────
+
 export default function ManageProductsClient({ initialProducts, categories }) {
-    const [products, setProducts]       = useState(initialProducts);
-    const [showModal, setShowModal]     = useState(false);
-    const [editProduct, setEditProduct] = useState(null);
+    const [products, setProducts]         = useState(initialProducts);
+    const [showModal, setShowModal]       = useState(false);
+    const [editProduct, setEditProduct]   = useState(null);
     const [deleteTarget, setDeleteTarget] = useState(null);
     const [deleteLoading, setDeleteLoading] = useState(false);
-    const [sort, setSort]               = useState("name-asc");
+    const [sort, setSort]                 = useState("name-asc");
+
 
     function openCreate() {
-        setEditProduct(null);
+        setEditProduct(null); // clear any previous edit target
         setShowModal(true);
     }
 
@@ -346,28 +351,35 @@ export default function ManageProductsClient({ initialProducts, categories }) {
         setEditProduct(null);
     }
 
-    async function handleDelete(productId) {
+
+    function handleDelete(productId) {
         const product = products.find((p) => p.productId === productId);
         if (product) setDeleteTarget(product);
     }
 
+    // Called when the user clicks "Delete" inside the confirmation dialog
     async function confirmDelete() {
         if (!deleteTarget) return;
+
         const productId = deleteTarget.productId;
         setDeleteLoading(true);
         const res = await deleteProductAction(productId);
         setDeleteLoading(false);
+
         if (res) {
             setProducts((prev) => prev.filter((p) => p.productId !== productId));
             toast.success("Product deleted.");
         } else {
             toast.error("Failed to delete product.");
         }
-        setDeleteTarget(null);
+
+        setDeleteTarget(null); // close the dialog either way
     }
 
+    // Handles both create and update
     async function handleSave(data) {
         if (editProduct) {
+            // Update existing product
             const updated = await updateProductAction(editProduct.productId, data);
             if (updated) {
                 setProducts((prev) =>
@@ -379,9 +391,10 @@ export default function ManageProductsClient({ initialProducts, categories }) {
                 toast.error("Failed to update product.");
             }
         } else {
+            //Create new product
             const created = await createProductAction(data);
             if (created) {
-                setProducts((prev) => [created, ...prev]);
+                setProducts((prev) => [created, ...prev]); // prepend so it appears first
                 toast.success("Product created.");
                 closeModal();
             } else {
@@ -390,18 +403,20 @@ export default function ManageProductsClient({ initialProducts, categories }) {
         }
     }
 
+
     const sorted = [...products].filter(Boolean).sort((a, b) => {
-        if (sort === "name-asc")    return a.name.localeCompare(b.name);
-        if (sort === "name-desc")   return b.name.localeCompare(a.name);
-        if (sort === "price-asc")   return a.price - b.price;
-        if (sort === "price-desc")  return b.price - a.price;
+        if (sort === "name-asc")   return a.name.localeCompare(b.name);
+        if (sort === "name-desc")  return b.name.localeCompare(a.name);
+        if (sort === "price-asc")  return a.price - b.price;
+        if (sort === "price-desc") return b.price - a.price;
         return 0;
     });
+
 
     return (
         <div className="mx-auto max-w-7xl px-4 py-8">
 
-            {/* Page header */}
+            {/* Page header — title + sort dropdown */}
             <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Manage Products</h1>
@@ -425,7 +440,7 @@ export default function ManageProductsClient({ initialProducts, categories }) {
                 </div>
             </div>
 
-            {/* Products panel */}
+            {/* Products grid panel */}
             <div className="rounded-2xl border border-gray-200 bg-white p-6">
                 <div className="mb-5 flex items-center justify-between">
                     <h2 className="font-semibold text-gray-900">Products</h2>
@@ -439,7 +454,9 @@ export default function ManageProductsClient({ initialProducts, categories }) {
                 </div>
 
                 {sorted.length === 0 ? (
-                    <p className="py-20 text-center text-gray-400">No products yet. Click &quot;Create product&quot; to add one.</p>
+                    <p className="py-20 text-center text-gray-400">
+                        No products yet. Click &quot;Create product&quot; to add one.
+                    </p>
                 ) : (
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                         {sorted.map((product) => (
@@ -455,9 +472,9 @@ export default function ManageProductsClient({ initialProducts, categories }) {
                 )}
             </div>
 
-            {/* Edit/Create Modal */}
+            {/* Create / Edit */}
             {showModal && (
-                <ProductFormModal
+                <ProductForm
                     product={editProduct}
                     categories={categories}
                     onClose={closeModal}
@@ -465,9 +482,9 @@ export default function ManageProductsClient({ initialProducts, categories }) {
                 />
             )}
 
-            {/* Delete Confirmation Modal */}
+            {/* Delete confirmation dialog */}
             {deleteTarget && (
-                <DeleteConfirmModal
+                <DeleteConfirm
                     product={deleteTarget}
                     onCancel={() => setDeleteTarget(null)}
                     onConfirm={confirmDelete}
