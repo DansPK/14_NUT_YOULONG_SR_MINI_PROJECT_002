@@ -20,14 +20,25 @@ export function StarRow({ rating = 4.8 }) {
   );
 }
 
+function isValidImageUrl(url) {
+  if (!url) return false;
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export default function ProductCardComponent({ product }) {
   const { productId, productName, price, imageUrl } = product;
+  const hasValidImage = isValidImageUrl(imageUrl);
 
   return (
     <article className="group relative rounded-2xl border border-gray-100 bg-white p-4 shadow-sm transition hover:shadow-md">
       <Link href={`/products/${productId}`} className="block">
         <div className="relative aspect-square overflow-hidden rounded-xl bg-gray-100">
-          {imageUrl ? (
+          {hasValidImage ? (
             <Image
               src={imageUrl}
               alt={productName ?? "product image"}
