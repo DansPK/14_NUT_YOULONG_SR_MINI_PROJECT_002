@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import ShopCardComponent from "./ShopCardComponent";
 
 const MAX_PRICE = 300;
@@ -14,66 +14,41 @@ const QUICK_PRICES = [
 export default function ShopFilterComponent({ products = [], categories = [] }) {
   const [search, setSearch] = useState("");
   const [maxPrice, setMaxPrice] = useState(null);
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState([]);
 
   const sliderValue = maxPrice ?? MAX_PRICE;
 
-  // Build { categoryId -> categoryName } lookup map
-  const catMap = useMemo(() => {
-    const map = {};
-    for (const c of categories) {
-      if (c.categoryId) map[c.categoryId] = c.categoryName ?? c.name ?? c.categoryId;
-    }
-    return map;
-  }, [categories]);
+  // Filter products based on search, price, and selected categories
+  const filtered = products.filter((product) => {
+    const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase());
+    const matchesPrice = maxPrice === null || product.price <= maxPrice;
+    const matchesCategory = selectedCategoryIds.length === 0 || selectedCategoryIds.includes(product.categoryId);
+    return matchesSearch && matchesPrice && matchesCategory;
+  });
 
-  function getCatLabel(product) {
-    return (
-      catMap[product?.categoryId] ||
-      product?.category?.categoryName ||
-      product?.categoryName ||
-      "Uncategorized"
-    );
+  // Get the category name for a product
+  function getCategoryName(product) {
+    const category = categories.find((c) => c.categoryId === product.categoryId);
+    return category ? category.name : "Uncategorized";
   }
 
-  // Count per category (from all products)
-  const categoryCounts = useMemo(() => {
-    const map = {};
-    for (const p of products) {
-      const label = getCatLabel(p);
-      map[label] = (map[label] || 0) + 1;
-    }
-    return map;
-  }, [products, catMap]);
+  // Count how many products belong to each category
+  function getProductCount(categoryId) {
+    return products.filter((p) => p.categoryId === categoryId).length;
+  }
 
-  const allCategories = Object.keys(categoryCounts);
-
-  // Filtered products
-  const filtered = useMemo(() => {
-    return products.filter((p) => {
-      const name = (p.name ?? "").toLowerCase();
-      const price = p.price ?? 0;
-      const cat = getCatLabel(p);
-
-      if (search && !name.includes(search.toLowerCase())) return false;
-      if (maxPrice !== null && price > maxPrice) return false;
-      if (selectedCategories.length > 0 && !selectedCategories.includes(cat))
-        return false;
-
-      return true;
-    });
-  }, [products, search, maxPrice, selectedCategories, catMap]);
-
-  function toggleCategory(name) {
-    setSelectedCategories((prev) =>
-      prev.includes(name) ? prev.filter((c) => c !== name) : [...prev, name]
+  function toggleCategory(categoryId) {
+    setSelectedCategoryIds((prev) =>
+      prev.includes(categoryId)
+        ? prev.filter((id) => id !== categoryId)
+        : [...prev, categoryId]
     );
   }
 
   function resetFilters() {
     setSearch("");
     setMaxPrice(null);
-    setSelectedCategories([]);
+    setSelectedCategoryIds([]);
   }
 
   return (
@@ -177,21 +152,23 @@ export default function ShopFilterComponent({ products = [], categories = [] }) 
               Categories
             </p>
             <div className="mt-2 flex flex-col gap-2.5">
-              {allCategories.map((cat) => (
+              {categories.map((category) => (
                 <label
-                  key={cat}
+                  key={category.categoryId}
                   className="flex cursor-pointer items-center justify-between gap-2"
                 >
                   <div className="flex items-center gap-2">
                     <input
                       type="checkbox"
-                      checked={selectedCategories.includes(cat)}
-                      onChange={() => toggleCategory(cat)}
+                      checked={selectedCategoryIds.includes(category.categoryId)}
+                      onChange={() => toggleCategory(category.categoryId)}
                       className="h-4 w-4 rounded border-gray-300 accent-gray-900"
                     />
-                    <span className="text-sm text-gray-700">{cat}</span>
+                    <span className="text-sm text-gray-700">{category.name}</span>
                   </div>
-                  <span className="text-xs text-gray-400">{categoryCounts[cat]}</span>
+                  <span className="text-xs text-gray-400">
+                    {getProductCount(category.categoryId)}
+                  </span>
                 </label>
               ))}
             </div>
@@ -213,7 +190,7 @@ export default function ShopFilterComponent({ products = [], categories = [] }) 
                 <ShopCardComponent
                   key={product.productId}
                   product={product}
-                  catLabel={getCatLabel(product)}
+                  catLabel={getCategoryName(product)}
                 />
               ))}
             </div>

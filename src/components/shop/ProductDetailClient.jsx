@@ -5,16 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/store/cartStore";
 import { toast } from "sonner";
+import { ShoppingCart, RotateCcw } from "lucide-react";
 
-const FALLBACK_IMAGE = "https://placehold.co/600x600/f3f4f6/9ca3af?text=No+Image";
+const FALLBACK_IMAGE = "https://placehold.co/600x600/f3f4f6/9ca3af.png?text=No+Image";
 
-function isValidUrl(str) {
-    if (!str || typeof str !== "string") return false;
-    try {
-        const url = new URL(str);
-        return url.protocol === "http:" || url.protocol === "https:";
-    } catch { return false; }
-}
+
 
 function StarRow({ rating = 0 }) {
     const stars = Array.from({ length: 5 }, (_, i) => i < Math.round(rating));
@@ -27,12 +22,13 @@ function StarRow({ rating = 0 }) {
     );
 }
 
-export default function ProductDetailClient({ product, catLabel = "Beauty" }) {
+export default function ProductDetailClient({ product }) {
     const { name, description, price, imageUrl, colors = [], sizes = [], star } = product;
 
     const [selectedColor, setSelectedColor] = useState(colors[0] ?? null);
     const [selectedSize, setSelectedSize]   = useState(sizes[0] ?? null);
     const [qty, setQty]                     = useState(1);
+    const [imgSrc, setImgSrc] = useState(imageUrl?.startsWith("http") ? imageUrl : FALLBACK_IMAGE);
 
     const addItem = useCart((s) => s.addItem);
 
@@ -42,8 +38,6 @@ export default function ProductDetailClient({ product, catLabel = "Beauty" }) {
         }
         toast.success(`${name} added to cart!`);
     }
-
-    const imgSrc = isValidUrl(imageUrl) ? imageUrl : FALLBACK_IMAGE;
 
     return (
         <div className="mx-auto w-full max-w-7xl px-4 py-10">
@@ -63,9 +57,11 @@ export default function ProductDetailClient({ product, catLabel = "Beauty" }) {
                         src={imgSrc}
                         alt={name ?? "product"}
                         fill
+                        unoptimized
                         sizes="(max-width: 1024px) 100vw, 420px"
                         className="object-contain p-6"
                         priority
+                        onError={() => setImgSrc(FALLBACK_IMAGE)}
                     />
                 </div>
 
@@ -156,13 +152,13 @@ export default function ProductDetailClient({ product, catLabel = "Beauty" }) {
                             onClick={handleAddToCart}
                             className="flex flex-1 items-center justify-center gap-2 rounded-full bg-gray-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 active:scale-[0.99]"
                         >
-                            🛒 Add to cart
+                            <ShoppingCart size={16} /> Add to cart
                         </button>
                     </div>
 
                     {/* Returns badge */}
                     <div className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm text-gray-600">
-                        <span>↩️</span>
+                        <RotateCcw size={18} className="shrink-0 text-gray-500" />
                         <div>
                             <p className="font-medium text-gray-800">Free 30-day returns</p>
                             <p className="text-xs text-gray-400">See return policy details in cart.</p>
@@ -173,4 +169,3 @@ export default function ProductDetailClient({ product, catLabel = "Beauty" }) {
         </div>
     );
 }
-

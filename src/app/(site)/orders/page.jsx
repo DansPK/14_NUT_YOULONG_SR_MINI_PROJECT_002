@@ -1,6 +1,6 @@
 import { getOrdersAction } from "../../../../action/order.action";
-import { auth } from "@/auth";
 import Link from "next/link";
+import { Package } from "lucide-react";
 
 function formatDate(dateStr) {
     if (!dateStr) return "";
@@ -10,25 +10,12 @@ function formatDate(dateStr) {
 }
 
 export default async function OrdersPage() {
-    const session = await auth();
-
-    if (!session) {
-        return (
-            <div className="mx-auto flex min-h-[60vh] max-w-7xl flex-col items-center justify-center gap-3 px-4 py-20 text-center">
-                <p className="text-2xl font-semibold text-gray-900">Sign in to view your orders</p>
-                <Link href="/login" className="mt-4 rounded-full bg-lime-400 px-6 py-3 text-sm font-semibold text-gray-900 transition hover:bg-lime-300">
-                    Log in
-                </Link>
-            </div>
-        );
-    }
-
     const orders = await getOrdersAction();
 
     if (!Array.isArray(orders) || orders.length === 0) {
         return (
             <div className="mx-auto flex min-h-[60vh] max-w-7xl flex-col items-center justify-center gap-3 px-4 py-20 text-center">
-                <p className="text-5xl">📦</p>
+                <Package size={52} className="text-gray-300" />
                 <p className="text-2xl font-semibold text-gray-900">No orders yet</p>
                 <p className="text-sm text-gray-500">Place your first order from the shop.</p>
                 <Link href="/products" className="mt-4 rounded-full bg-lime-400 px-6 py-3 text-sm font-semibold text-gray-900 transition hover:bg-lime-300">
@@ -84,4 +71,3 @@ export default async function OrdersPage() {
         </div>
     );
 }
-

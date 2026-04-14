@@ -14,7 +14,9 @@ function isValidUrl(str) {
     try {
         const url = new URL(str);
         return url.protocol === "http:" || url.protocol === "https:";
-    } catch { return false; }
+    } catch {
+        return false;
+    }
 }
 
 export default function CartPage() {
@@ -30,7 +32,7 @@ export default function CartPage() {
     async function handleCheckout() {
         if (items.length === 0) return;
 
-        // Map cart items → API shape: { productId, orderQty }
+        // Map cart items to API { productId, orderQty }
         const orderDetailRequests = items.map((i) => ({
             productId: i.productId,
             orderQty: i.quantity,
